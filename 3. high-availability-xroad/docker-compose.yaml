@@ -1,0 +1,90 @@
+version: "3.7"
+
+services:
+  # X-Road Central Server
+  central_server:
+    container_name: xroad_cs
+    image: niis/xroad-central-server:bionic-6.24.1
+    ports:
+    - "4000:4000"
+    - "4001:80"
+    - "4002:9998"
+    - "4003:8888"
+    networks:
+      x-road_network:
+        ipv4_address: 172.25.0.2
+    volumes:
+    - type: volume
+      source: cs_ca_volume
+      target: /home/ca
+      volume:
+        nocopy: false
+    - type: volume
+      source: cs_db_volume
+      target: /var/lib/postgresql/10/main
+      volume:
+        nocopy: false
+    - type: volume
+      source: cs_nginx_volume
+      target: /usr/share/nginx/html
+      volume:
+        nocopy: false
+    - type: volume
+      source: cs_xroad_volume
+      target: /etc/xroad
+      volume:
+        nocopy: false
+    - type: volume
+      source: cs_public_volume
+      target: /var/lib/xroad
+      volume:
+        nocopy: false
+
+  # Security Servers
+  tecnologia_security_server:
+    container_name: tecnologia_ss
+    image: niis/xroad-security-server:bionic-6.24.1
+    ports:
+      - "4100:4000"
+      - "4101:80"
+    networks:
+      x-road_network:
+        ipv4_address: 172.25.0.3
+  # Transito Security Servers
+  transito_security_server1:
+    container_name: transito_ss1
+    image: niis/xroad-security-server:bionic-6.24.1
+    ports:
+      - "4200:4000"
+      - "4201:80"
+    networks:
+      x-road_network:
+        ipv4_address: 172.25.0.4
+  transito_security_server2:
+    container_name: transito_ss2
+    image: niis/xroad-security-server:bionic-6.24.1
+    ports:
+      - "4300:4000"
+      - "4301:80"
+    networks:
+      x-road_network:
+        ipv4_address: 172.25.0.5
+
+  
+
+volumes:
+  cs_ca_volume:
+  cs_db_volume:
+  cs_nginx_volume:
+  cs_xroad_volume:
+  cs_public_volume:
+
+networks:
+  x-road_network:
+    name: x-road-network
+    driver: bridge
+    internal: false
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.25.0.0/24

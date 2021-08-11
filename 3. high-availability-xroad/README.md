@@ -1,0 +1,1 @@
+Este repositorio contiene el código fuente de los sistemas de informacion y directivas de despliegue (docker-compose) para levantar todo el ambiente requerido para el Escenario de Atributos de Calidad de Escalabilidad y Alta Disponibilidad del Diplomado IOP XRoad UNAL 2020
